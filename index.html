@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Clock</title>
+    
+    <body bgcolor="#272822" text="#d8cbba">
+    
+    <style>
+        #clock {
+            font-size: 10em;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+            -webkit-transform: translateY(-50%) translateX(-50%);
+        }
+    </style>
+</head>
+<body>
+    <div id="clock">
+        
+    </div>
+    <script>
+        (async() => {
+            const sendTime = new Date().getTime();
+            const json = await (await fetch('https://3fe5a5f690efc790d4764f1c528a4ebb89fa4168.nict.go.jp/cgi-bin/json')).json();
+            const receiveTime = new Date().getTime();
+            const serverTime = json.st * 1000 + (receiveTime - sendTime) / 2;
+            const diff = serverTime - receiveTime;
+            setInterval(() => {
+                const date = new Date(Date.now() + diff);
+                const hour = ('0' + date.getHours()).slice(-2);
+                const minute = ('0' + date.getMinutes()).slice(-2);
+                const second = ('0' + date.getSeconds()).slice(-2);
+                const milliSecond = ('000' + date.getMilliseconds()).slice(-3);
+                document.getElementById('clock').innerText = `${hour}:${minute}:${second}.${milliSecond}`;
+            }, 0);
+        })();
+        
+    </script>
+</body>
+</html>
